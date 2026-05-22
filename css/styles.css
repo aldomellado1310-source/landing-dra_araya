@@ -1,0 +1,63 @@
+/* ── Scrollbar ─────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #f5f0e8; }
+::-webkit-scrollbar-thumb { background: #a3b89c; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #7c9475; }
+
+/* ── Prestige mark ─────────────────────────────────────── */
+.hito-quiet-mark {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: rgba(201, 169, 110, 0.08);
+    border: 1px solid rgba(201, 169, 110, 0.25);
+    border-radius: 999px;
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #a8895a;
+    font-weight: 600;
+}
+.hito-quiet-mark::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    background: #c9a96e;
+    border-radius: 50%;
+}
+
+/* ── Utility classes ───────────────────────────────────── */
+.clinical-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    border-radius: 999px;
+    padding: .35rem .7rem;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+.head-zone {
+    transition: all .25s ease;
+    filter: drop-shadow(0 1px 0 rgba(0,0,0,.04));
+}
+.head-zone:hover {
+    opacity: .92;
+    transform: translateY(-1px);
+}
+
+.photo-drop {
+    border: 1px dashed rgba(26,42,69,.22);
+    background: rgba(245,240,232,.58);
+}
+
+.traffic-dot {
+    width: .7rem;
+    height: .7rem;
+    border-radius: 999px;
+    display: inline-block;
+    box-shadow: 0 0 0 4px rgba(255,255,255,.7);
+}
