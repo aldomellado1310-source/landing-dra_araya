@@ -17,8 +17,10 @@ const appState = {
 function showToast(message, type = 'success') {
     const container = document.getElementById('toast-container');
     const toast = document.createElement('div');
-    toast.className = `pointer-events-auto p-4 rounded-xl shadow-lg border text-xs font-semibold bg-white ${type === 'success' ? 'border-sage text-navy' : 'border-red-300 text-red-800'}`;
-    toast.innerHTML = `<span>${message}</span>`;
+    toast.className = `toast-enter pointer-events-auto p-4 rounded-xl shadow-lg border text-xs font-semibold bg-white ${type === 'success' ? 'border-sage text-navy' : 'border-red-300 text-red-800'}`;
+    const label = document.createElement('span');
+    label.textContent = message;
+    toast.appendChild(label);
     container.appendChild(toast);
     setTimeout(() => {
         toast.style.opacity = '0';
@@ -33,7 +35,32 @@ function showSection(id) {
     });
     const active = document.getElementById('section-' + id);
     if (active) active.classList.remove('hidden');
+    const nav = document.getElementById('main-nav');
+    if (nav) nav.classList.toggle('hidden', id.startsWith('dashboard'));
+    closeMobileMenu();
     window.scrollTo(0, 0);
+}
+
+function toggleMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('btn-mobile-menu');
+    if (!menu) return;
+    const isOpen = !menu.classList.contains('hidden');
+    menu.classList.toggle('hidden', isOpen);
+    if (btn) btn.setAttribute('aria-expanded', String(!isOpen));
+}
+
+function closeMobileMenu() {
+    const menu = document.getElementById('mobile-menu');
+    const btn = document.getElementById('btn-mobile-menu');
+    if (menu) menu.classList.add('hidden');
+    if (btn) btn.setAttribute('aria-expanded', 'false');
+}
+
+function submitLead(event) {
+    event.preventDefault();
+    showToast('¡Solicitud enviada! Nos contactaremos por WhatsApp.', 'success');
+    event.target.reset();
 }
 
 function loginPatient() {
@@ -51,8 +78,12 @@ function logout() {
     showSection('landing');
 }
 
-function setQuizAnswer(key, val) {
+function setQuizAnswer(key, val, btn) {
     appState.quiz[key] = val;
+    if (btn) {
+        btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('quiz-selected'));
+        btn.classList.add('quiz-selected');
+    }
     if (appState.quiz.phase && appState.quiz.symptom) {
         const r = document.getElementById('quiz-result');
         r.classList.remove('hidden');
@@ -100,8 +131,8 @@ function renderCalendar(cd) {
         c.className =
             i === cd          ? 'p-2 rounded-lg bg-navy text-white border-2 border-sage' :
             milestones.includes(i) ? 'p-2 rounded-lg bg-sage text-navy' :
-            i < cd            ? 'p-2 rounded-lg bg-creme text-navy/60' :
-                                'p-2 rounded-lg bg-white border border-navy/10 text-navy/40';
+            i < cd            ? 'p-2 rounded-lg bg-creme text-navy/70' :
+                                'p-2 rounded-lg bg-white border border-navy/10 text-navy/55';
         c.style.cursor = 'pointer';
         c.onclick = () => {
             const slider = document.getElementById('evolution-day-slider');
@@ -114,6 +145,79 @@ function renderCalendar(cd) {
 
 function loadPatientDashboard() {
     updateEvolutionDay(appState.patient.day);
+}
+
+/* ── Dashboard profesional ─────────────────────────────── */
+
+function scrollToProSection(id) {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function focusQuickEntry() {
+    const input = document.getElementById('qe-name');
+    if (!input) return;
+    input.closest('form').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    setTimeout(() => input.focus({ preventScroll: true }), 350);
+}
+
+function createFollowup(event) {
+    event.preventDefault();
+    const name = document.getElementById('qe-name').value.trim();
+    const tech = document.getElementById('qe-tech').value;
+    const uf   = document.getElementById('qe-uf').value.trim();
+    const obs  = document.getElementById('qe-obs').value.trim();
+    if (!name) {
+        showToast('Ingresa el nombre del paciente.', 'error');
+        return;
+    }
+    const list = document.getElementById('patient-list');
+    const row = document.createElement('div');
+    row.className = 'p-5 hover:bg-creme/35 transition-colors bg-sage/5';
+    const detail = [ 'Día 1', tech, uf ? `${uf} UF` : null, obs || 'ingreso reciente' ].filter(Boolean).join(' · ');
+    row.innerHTML = `
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+            <div class="flex items-start gap-4">
+                <span class="traffic-dot bg-emerald-500 mt-2"></span>
+                <div>
+                    <p class="font-bold text-navy"><span class="patient-name"></span> <span class="text-[10px] text-sage-dark bg-sage/15 px-2 py-1 rounded-full ml-2">Nuevo</span></p>
+                    <p class="text-xs text-navy/65 mt-1 patient-detail"></p>
+                </div>
+            </div>
+            <div class="text-xs text-navy/65">Sin fotos aún</div>
+        </div>`;
+    row.querySelector('.patient-name').textContent = name;
+    row.querySelector('.patient-detail').textContent = detail;
+    list.prepend(row);
+    event.target.reset();
+    showToast(`Seguimiento creado para ${name}.`, 'success');
+    row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function previewPhoto(event, input) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => {
+        const label = input.closest('label');
+        const tile = document.createElement('div');
+        tile.className = label.classList.contains('h-32')
+            ? 'h-32 rounded-xl overflow-hidden border border-sage/40 relative'
+            : 'h-24 rounded-xl overflow-hidden border border-sage/40 relative';
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        img.alt = 'Foto de control subida';
+        img.className = 'w-full h-full object-cover';
+        tile.appendChild(img);
+        const tag = document.createElement('span');
+        tag.textContent = 'Hoy';
+        tag.className = 'absolute bottom-1 right-1 text-[9px] font-bold uppercase bg-navy/80 text-white px-1.5 py-0.5 rounded';
+        tile.appendChild(tag);
+        label.parentElement.insertBefore(tile, label);
+        input.value = '';
+        showToast('Foto agregada al registro de evolución.', 'success');
+    };
+    reader.readAsDataURL(file);
 }
 
 function setPatientTab(id) {
