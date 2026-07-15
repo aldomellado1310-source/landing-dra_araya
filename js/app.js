@@ -7,7 +7,7 @@ const appState = {
             1:  { title: "Día 1 · Inicio", desc: "Agua termal cada 20 min. Dormir semisentado.", meds: ["Cefadroxilo 500mg", "Prednisona 20mg"] },
             5:  { title: "Día 5 · Curación temprana", desc: "Primera evaluación profesional. Revisión injerto a injerto.", meds: ["Cefadroxilo 500mg"] },
             10: { title: "Día 10 · Caída de costras", desc: "Retiro de costras. Inicio rutina Lazartigue Thicker.", meds: ["Shampoo Thicker"] },
-            15: { title: "Día 15 · Efluvio activo", desc: "Caída del pelo injertado — es normal y esperado.", meds: ["Lazartigue Cica-Calm"] },
+            15: { title: "Día 15 · Efluvio activo", desc: "Caída del pelo injertado: es normal y esperado.", meds: ["Lazartigue Cica-Calm"] },
             20: { title: "Día 20 · Actividad liviana", desc: "Ejercicio físico liviano permitido. Sin pesas.", meds: ["Lazartigue Cica-Calm"] },
             30: { title: "Día 30 · Hito 1 mes", desc: "Casco duro y pesas permitidos. Tintes desde día 60.", meds: ["Lazartigue Stronger"] }
         }
@@ -23,8 +23,8 @@ function showToast(message, type = 'success') {
     toast.appendChild(label);
     container.appendChild(toast);
     setTimeout(() => {
-        toast.style.opacity = '0';
-        setTimeout(() => toast.remove(), 300);
+        toast.classList.add('toast-exit');
+        setTimeout(() => toast.remove(), 200);
     }, 3000);
 }
 
@@ -96,16 +96,9 @@ function setQuizAnswer(key, val, btn) {
     }
 }
 
-function updateEvolutionDay(dayVal) {
-    appState.patient.day = parseInt(dayVal);
-    document.getElementById('lbl-evolution-day').innerText = dayVal;
-    const key =
-        dayVal >= 30 ? 30 :
-        dayVal >= 20 ? 20 :
-        dayVal >= 15 ? 15 :
-        dayVal >= 10 ? 10 :
-        dayVal >= 5  ? 5  : 1;
-    const pd = appState.patient.manual[key];
+let lastMilestoneKey = null;
+
+function applyDayContent(pd) {
     document.getElementById('p-action-title').innerText = pd.title;
     document.getElementById('p-action-desc').innerText  = pd.desc;
     const ml = document.getElementById('p-action-meds');
@@ -117,14 +110,41 @@ function updateEvolutionDay(dayVal) {
             ml.appendChild(li);
         });
     }
+}
+
+function updateEvolutionDay(dayVal) {
+    appState.patient.day = parseInt(dayVal);
+    document.getElementById('lbl-evolution-day').innerText = dayVal;
+    const key =
+        dayVal >= 30 ? 30 :
+        dayVal >= 20 ? 20 :
+        dayVal >= 15 ? 15 :
+        dayVal >= 10 ? 10 :
+        dayVal >= 5  ? 5  : 1;
+    const pd = appState.patient.manual[key];
+    const card = document.getElementById('card-action');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (card && lastMilestoneKey !== null && key !== lastMilestoneKey && !reduceMotion) {
+        card.classList.add('content-swap');
+        setTimeout(() => {
+            applyDayContent(pd);
+            card.classList.remove('content-swap');
+        }, 150);
+    } else {
+        applyDayContent(pd);
+    }
+    lastMilestoneKey = key;
     renderCalendar(parseInt(dayVal));
 }
+
+let calendarAnimated = false;
 
 function renderCalendar(cd) {
     const grid = document.getElementById('grid-30-days');
     if (!grid) return;
     grid.innerHTML = '';
     const milestones = [2, 5, 10, 15, 20, 30];
+    const stagger = !calendarAnimated && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     for (let i = 1; i <= 30; i++) {
         const c = document.createElement('div');
         c.innerText = i;
@@ -133,6 +153,10 @@ function renderCalendar(cd) {
             milestones.includes(i) ? 'p-2 rounded-lg bg-sage text-navy' :
             i < cd            ? 'p-2 rounded-lg bg-creme text-navy/70' :
                                 'p-2 rounded-lg bg-white border border-navy/10 text-navy/55';
+        if (stagger) {
+            c.classList.add('cal-enter');
+            c.style.animationDelay = `${i * 12}ms`;
+        }
         c.style.cursor = 'pointer';
         c.onclick = () => {
             const slider = document.getElementById('evolution-day-slider');
@@ -141,7 +165,32 @@ function renderCalendar(cd) {
         };
         grid.appendChild(c);
     }
+    if (stagger) calendarAnimated = true;
 }
+
+/* ── Reveals de scroll ─────────────────────────────────── */
+/* El contenido es visible por defecto: solo las secciones bajo el
+   fold reciben la clase de entrada, y solo si hay JS y sin
+   preferencia de reduced-motion. */
+function initScrollReveals() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!('IntersectionObserver' in window)) return;
+    const io = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('reveal-in');
+                io.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('#section-landing > section').forEach(sec => {
+        if (sec.getBoundingClientRect().top > window.innerHeight) {
+            sec.classList.add('reveal-init');
+            io.observe(sec);
+        }
+    });
+}
+document.addEventListener('DOMContentLoaded', initScrollReveals);
 
 function loadPatientDashboard() {
     updateEvolutionDay(appState.patient.day);

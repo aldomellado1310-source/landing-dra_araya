@@ -37,7 +37,7 @@ directamente desde cualquier equipo (file://) y en GitHub Pages.
 - **Paleta**: navy `#1a2a45` (autoridad médica) · sage `#a3b89c` (calma
   clínica) · creme `#f5f0e8` (calidez) · gold `#c9a96e` (prestigio, solo
   acentos). Definida en `tailwind.config` inline en `index.html`.
-- **Tipografía**: Playfair Display (serif, títulos) + Inter (sans, UI/cuerpo).
+- **Tipografía**: Playfair Display (serif, títulos) + Hanken Grotesk (sans, UI/cuerpo).
 - **Tono**: clínico-premium. Sobrio, cálido, sin estridencia.
 
 ## Happy path de demo (< 3 minutos)
