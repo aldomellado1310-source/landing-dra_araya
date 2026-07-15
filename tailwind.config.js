@@ -11,7 +11,7 @@ module.exports = {
         creme: { DEFAULT: '#f5f0e8', light: '#faf8f5', dark: '#e3dac9', white: '#ffffff' },
         gold: { DEFAULT: '#c9a96e', dark: '#a8895a' }
       },
-      fontFamily: { sans: ['Inter', 'sans-serif'], serif: ['Playfair Display', 'serif'] }
+      fontFamily: { sans: ['Hanken Grotesk', 'system-ui', 'sans-serif'], serif: ['Playfair Display', 'Georgia', 'serif'] }
     }
   }
 }
