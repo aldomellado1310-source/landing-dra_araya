@@ -17,7 +17,7 @@ const appState = {
 function showToast(message, type = 'success') {
     const container = document.getElementById('toast-container');
     const toast = document.createElement('div');
-    toast.className = `toast-enter pointer-events-auto p-4 rounded-xl shadow-lg border text-xs font-semibold bg-white ${type === 'success' ? 'border-sage text-navy' : 'border-red-300 text-red-800'}`;
+    toast.className = `toast-enter pointer-events-auto w-full sm:w-auto sm:max-w-sm p-4 rounded-xl shadow-lg border text-xs font-semibold bg-white ${type === 'success' ? 'border-sage text-navy' : 'border-red-300 text-red-800'}`;
     const label = document.createElement('span');
     label.textContent = message;
     toast.appendChild(label);
@@ -302,7 +302,20 @@ function setPatientTab(id) {
         const btn = document.getElementById(`btn-tab-${t}`);
         if (el)  el.style.display = t === id ? 'block' : 'none';
         if (btn) btn.className = t === id
-            ? 'w-full text-left px-3 py-2.5 rounded-lg font-medium bg-white/10 text-white'
-            : 'w-full text-left px-3 py-2.5 rounded-lg font-medium text-creme/75 hover:bg-white/5';
+            ? 'shrink-0 whitespace-nowrap lg:w-full text-left px-4 py-2 lg:px-3 lg:py-2.5 rounded-lg font-medium bg-white/10 text-white'
+            : 'shrink-0 whitespace-nowrap lg:w-full text-left px-4 py-2 lg:px-3 lg:py-2.5 rounded-lg font-medium text-creme/75 hover:bg-white/5';
     });
+    scrollTabContentIntoView(`p-tab-${id}`);
+}
+
+/* Solo baja el scroll si el contenido de la pestaña no está ya a la
+   vista: en desktop (sidebar fijo al lado) casi nunca hace falta; en
+   móvil (sidebar apilado arriba) es lo que evita que el cambio de
+   pestaña parezca no haber hecho nada. */
+function scrollTabContentIntoView(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const alreadyVisible = rect.top >= 0 && rect.top < window.innerHeight * 0.5;
+    if (!alreadyVisible) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
