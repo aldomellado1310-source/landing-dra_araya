@@ -19,6 +19,39 @@
 <!-- Tailwind compilado estáticamente (ver README): sin dependencia del Play CDN. -->
 <link rel="stylesheet" href="css/tailwind.css"/>
 <link rel="stylesheet" href="css/styles.css"/>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Physician",
+  "name": "Dra. Javiera Araya Medina",
+  "medicalSpecialty": "Dermatology",
+  "description": "Médico cirujano especializada en tricología, medicina capilar e injerto capilar FUE.",
+  "areaServed": ["Los Ángeles, Chile", "Concepción, Chile"],
+  "availableService": [
+    { "@type": "MedicalProcedure", "name": "Injerto capilar FUE Zafiro" },
+    { "@type": "MedicalProcedure", "name": "Consulta médica de tricología" },
+    { "@type": "MedicalProcedure", "name": "Mesoterapia y PRP capilar" }
+  ],
+  "location": [
+    {
+      "@type": "MedicalClinic",
+      "name": "Clínica Cialo",
+      "address": { "@type": "PostalAddress", "streetAddress": "Bulnes 220, Oficina 509, Edificio Puerto Mayor II", "addressLocality": "Los Ángeles", "addressRegion": "Biobío", "addressCountry": "CL" }
+    },
+    {
+      "@type": "MedicalClinic",
+      "name": "Clínica Hunza",
+      "address": { "@type": "PostalAddress", "streetAddress": "Av. Arturo Prat 199, Oficina 809 Torre A", "addressLocality": "Concepción", "addressRegion": "Biobío", "addressCountry": "CL" }
+    },
+    {
+      "@type": "MedicalClinic",
+      "name": "Trico Solutions",
+      "address": { "@type": "PostalAddress", "addressLocality": "Concepción", "addressRegion": "Biobío", "addressCountry": "CL" }
+    }
+  ],
+  "sameAs": ["https://www.instagram.com/dra.javieraarayam"]
+}
+</script>
 </head>
 <body class="bg-creme-white text-navy font-sans antialiased min-h-screen selection:bg-sage selection:text-navy">
 <div aria-live="polite" class="fixed top-5 right-5 z-50 space-y-3 pointer-events-none" id="toast-container"></div>
@@ -33,6 +66,7 @@
 <a class="hover:text-white transition-colors" href="#tratamientos" onclick="showSection('landing')">Arsenal Clínico</a>
 <a class="hover:text-white transition-colors" href="#alianza-lazartigue" onclick="showSection('landing')">Lazartigue</a>
 <a class="hover:text-white transition-colors" href="#sedes" onclick="showSection('landing')">Sedes</a>
+<a class="hover:text-white transition-colors" href="#faq" onclick="showSection('landing')">FAQ</a>
 </div>
 <div class="flex items-center gap-3">
 <button class="bg-sage hover:bg-sage-dark text-navy px-4 py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider transition-all shadow-sm" onclick="showSection('login-patient')">
@@ -48,6 +82,7 @@
 <a class="block px-3 py-2.5 rounded-lg text-creme/85 hover:bg-white/5" href="#tratamientos" onclick="showSection('landing')">Arsenal Clínico</a>
 <a class="block px-3 py-2.5 rounded-lg text-creme/85 hover:bg-white/5" href="#alianza-lazartigue" onclick="showSection('landing')">Lazartigue</a>
 <a class="block px-3 py-2.5 rounded-lg text-creme/85 hover:bg-white/5" href="#sedes" onclick="showSection('landing')">Sedes</a>
+<a class="block px-3 py-2.5 rounded-lg text-creme/85 hover:bg-white/5" href="#faq" onclick="showSection('landing')">FAQ</a>
 <button class="block w-full text-left px-3 py-2.5 rounded-lg text-creme/85 hover:bg-white/5 text-xs font-semibold tracking-widest uppercase" onclick="showSection('login-professional')">Portal médico</button>
 </div>
 </nav>
@@ -115,29 +150,46 @@
 </div>
 </div>
 </header>
+<!-- ───── FRANJA DE CREDENCIALES ───── -->
+<div class="bg-white border-b border-navy/5 px-6 py-5">
+<div class="max-w-7xl mx-auto flex flex-wrap justify-center items-center gap-x-10 gap-y-3 text-navy/60 text-xs font-semibold tracking-wide text-center">
+<span>Universidad San Sebastián</span>
+<span class="hidden sm:inline text-navy/20">·</span>
+<span>Caicedo Academy · Málaga</span>
+<span class="hidden sm:inline text-navy/20">·</span>
+<span>Sistema Trivellini Long FUE</span>
+<span class="hidden sm:inline text-navy/20">·</span>
+<span>Formación en España y Argentina</span>
+</div>
+</div>
 <!-- ───── DOLORES / IDENTIFICACIÓN DEL PACIENTE ───── -->
 <!-- Antes que la doctora: el paciente debe verse a sí mismo en este sitio -->
 <section class="max-w-5xl mx-auto px-6 scroll-mt-24" id="dolores">
-<div class="text-center space-y-4 mb-12">
+<div class="text-center space-y-4 mb-4">
 <h2 class="text-3xl md:text-4xl font-serif text-navy font-normal">Diseñado para ti si presentas…</h2>
+<p class="text-sm text-navy/65">Toca tu caso: precargamos el motivo en tu solicitud de evaluación.</p>
 </div>
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-<div class="bg-creme p-6 rounded-2xl border border-navy/5 text-center space-y-4 shadow-sm">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="self-triage-grid">
+<button class="triage-card bg-creme p-6 rounded-2xl border border-navy/5 text-center space-y-4 shadow-sm" data-motivo="Caída severa de cabello" type="button" onclick="selectTriage(this)">
 <div class="w-12 h-12 mx-auto rounded-full bg-white flex items-center justify-center"><svg class="w-6 h-6 text-sage-dark" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 3c4 4 6 4 10 0M7 21c4-4 6-4 10 0M8 6h8M8 10h8M8 14h8M8 18h8M7 3c-4 6-4 12 0 18M17 3c4 6 4 12 0 18"/></svg></div>
 <p class="text-xs font-semibold text-navy leading-relaxed">Alopecia androgenética común (masculina y femenina)</p>
-</div>
-<div class="bg-creme p-6 rounded-2xl border border-navy/5 text-center space-y-4 shadow-sm">
+</button>
+<button class="triage-card bg-creme p-6 rounded-2xl border border-navy/5 text-center space-y-4 shadow-sm" data-motivo="Entradas o coronilla despoblada" type="button" onclick="selectTriage(this)">
 <div class="w-12 h-12 mx-auto rounded-full bg-white flex items-center justify-center"><svg class="w-6 h-6 text-sage-dark" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6c4 3 12 3 16 0M6 9c3 2 9 2 12 0M8 12c2 1.5 6 1.5 8 0M10 15c1 .8 3 .8 4 0M12 18h0"/><path stroke-linecap="round" d="M5 20h14"/></svg></div>
 <p class="text-xs font-semibold text-navy leading-relaxed">Retroceso evidente de línea capilar o coronilla despoblada</p>
-</div>
-<div class="bg-creme p-6 rounded-2xl border border-navy/5 text-center space-y-4 shadow-sm">
+</button>
+<button class="triage-card bg-creme p-6 rounded-2xl border border-navy/5 text-center space-y-4 shadow-sm" data-motivo="Pérdida generalizada de densidad" type="button" onclick="selectTriage(this)">
 <div class="w-12 h-12 mx-auto rounded-full bg-white flex items-center justify-center"><svg class="w-6 h-6 text-sage-dark" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="5.5"/><path stroke-linecap="round" d="M15 15l5 5"/><path stroke-linecap="round" d="M8.5 10.5h4"/></svg></div>
 <p class="text-xs font-semibold text-navy leading-relaxed">Pérdida difusa de volumen y afinamiento folicular</p>
-</div>
-<div class="bg-creme p-6 rounded-2xl border border-navy/5 text-center space-y-4 shadow-sm">
+</button>
+<button class="triage-card bg-creme p-6 rounded-2xl border border-navy/5 text-center space-y-4 shadow-sm" data-motivo="Diseño médico de cejas o barba" type="button" onclick="selectTriage(this)">
 <div class="w-12 h-12 mx-auto rounded-full bg-white flex items-center justify-center"><svg class="w-6 h-6 text-sage-dark" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M7 9c1.5-3 8.5-3 10 0M6.5 11.5c0 5 2.5 8 5.5 8s5.5-3 5.5-8"/><path stroke-linecap="round" d="M9 14c2 1.8 4 1.8 6 0M9 17c1.5 1 4.5 1 6 0"/></svg></div>
 <p class="text-xs font-semibold text-navy leading-relaxed">Zonas alopécicas en cejas, barba u otras áreas faciales</p>
+</button>
 </div>
+<div class="hidden mt-6 flex flex-col sm:flex-row items-center justify-between gap-3 bg-navy text-creme rounded-2xl p-5" id="triage-result">
+<p class="text-sm"><span class="text-sage font-semibold">Caso identificado.</span> Continuemos con tu evaluación.</p>
+<button class="px-6 py-2.5 bg-sage hover:bg-sage-dark text-navy rounded-lg text-xs font-bold uppercase tracking-wider transition-all shrink-0" onclick="document.getElementById('captacion').scrollIntoView({behavior:'smooth'})" type="button">Continuar</button>
 </div>
 </section>
 <!-- ───── LA PROFESIONAL ───── -->
@@ -410,6 +462,49 @@
 </div>
 </div>
 </section>
+<!-- ───── PREGUNTAS FRECUENTES ───── -->
+<section class="max-w-3xl mx-auto px-6 scroll-mt-24" id="faq">
+<div class="text-center space-y-3 mb-10">
+<h2 class="text-3xl md:text-4xl font-serif text-navy font-normal">Preguntas frecuentes</h2>
+</div>
+<div class="space-y-3">
+<details class="faq-item bg-creme rounded-2xl border border-navy/5 open:shadow-sm">
+<summary class="px-6 py-4 font-semibold text-navy text-sm cursor-pointer list-none flex justify-between items-center gap-4">
+<span>¿El injerto capilar FUE es doloroso?</span>
+<svg class="faq-chevron w-4 h-4 text-sage-dark shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</summary>
+<p class="px-6 pb-5 text-sm text-navy/70 leading-relaxed">Se realiza de forma ambulatoria bajo anestesia local. La mayoría de los pacientes describe solo una molestia leve durante la infiltración inicial, y el manejo posterior del dolor es mínimo con la pauta indicada.</p>
+</details>
+<details class="faq-item bg-creme rounded-2xl border border-navy/5 open:shadow-sm">
+<summary class="px-6 py-4 font-semibold text-navy text-sm cursor-pointer list-none flex justify-between items-center gap-4">
+<span>¿Cuándo se empiezan a ver resultados?</span>
+<svg class="faq-chevron w-4 h-4 text-sage-dark shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</summary>
+<p class="px-6 pb-5 text-sm text-navy/70 leading-relaxed">El cabello injertado cae entre el día 15 y 30 (efluvio esperado) y el folículo entra en reposo. El crecimiento visible comienza alrededor del tercer mes, con densidad y grosor consolidándose entre los 9 y 12 meses.</p>
+</details>
+<details class="faq-item bg-creme rounded-2xl border border-navy/5 open:shadow-sm">
+<summary class="px-6 py-4 font-semibold text-navy text-sm cursor-pointer list-none flex justify-between items-center gap-4">
+<span>¿Es un resultado definitivo?</span>
+<svg class="faq-chevron w-4 h-4 text-sage-dark shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</summary>
+<p class="px-6 pb-5 text-sm text-navy/70 leading-relaxed">Sí: los folículos trasplantados desde la zona donante son genéticamente resistentes a la miniaturización androgenética, por lo que el cabello implantado no cae con el tiempo.</p>
+</details>
+<details class="faq-item bg-creme rounded-2xl border border-navy/5 open:shadow-sm">
+<summary class="px-6 py-4 font-semibold text-navy text-sm cursor-pointer list-none flex justify-between items-center gap-4">
+<span>¿Qué pasa si tengo poca zona donante?</span>
+<svg class="faq-chevron w-4 h-4 text-sage-dark shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</summary>
+<p class="px-6 pb-5 text-sm text-navy/70 leading-relaxed">La evaluación de densidad donante es parte del diagnóstico inicial. Según el caso, la técnica Long Hair FUE permite optimizar la extracción sin rapado, y el plan se ajusta para priorizar las zonas de mayor impacto estético.</p>
+</details>
+<details class="faq-item bg-creme rounded-2xl border border-navy/5 open:shadow-sm">
+<summary class="px-6 py-4 font-semibold text-navy text-sm cursor-pointer list-none flex justify-between items-center gap-4">
+<span>¿La consulta de diagnóstico tiene costo?</span>
+<svg class="faq-chevron w-4 h-4 text-sage-dark shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+</summary>
+<p class="px-6 pb-5 text-sm text-navy/70 leading-relaxed">El valor se confirma según la sede y el tipo de evaluación. Escríbenos por WhatsApp o agenda directo en la sede de tu preferencia para conocer el valor vigente.</p>
+</details>
+</div>
+</section>
 <!-- ───── CAPTACIÓN ───── -->
 <section class="max-w-3xl mx-auto px-6 scroll-mt-24" id="captacion">
 <div class="bg-creme rounded-3xl p-8 border border-navy/5 shadow-xl space-y-6">
@@ -430,7 +525,7 @@
 </div>
 <div>
 <label class="block text-[10px] uppercase font-bold tracking-wider text-navy/70 mb-1">Motivo de la consulta</label>
-<select class="w-full px-4 py-3 rounded-xl bg-white border border-navy/10 focus:outline-none focus:border-sage text-navy">
+<select class="w-full px-4 py-3 rounded-xl bg-white border border-navy/10 focus:outline-none focus:border-sage text-navy" id="lead-motivo">
 <option>Caída severa de cabello</option>
 <option>Entradas o coronilla despoblada</option>
 <option>Pérdida generalizada de densidad</option>
@@ -671,6 +766,12 @@
   </main>
 </div>
 
+<!-- CTA MÓVIL PERSISTENTE (aparece tras el hero, solo en la landing) -->
+<div class="hidden fixed bottom-0 inset-x-0 z-30 md:hidden bg-white/95 backdrop-blur border-t border-navy/10 px-4 py-3 shadow-2xl" id="sticky-cta">
+<button class="w-full py-3 bg-navy hover:bg-navy-light text-creme rounded-xl text-xs font-bold uppercase tracking-widest transition-all shadow-md" onclick="document.getElementById('captacion').scrollIntoView({behavior:'smooth'})" type="button">
+                Agendar evaluación capilar
+            </button>
+</div>
 <!-- FOOTER -->
 <footer class="bg-navy text-creme py-12 px-6 border-t border-sage/20 text-xs">
 <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">

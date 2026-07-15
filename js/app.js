@@ -37,6 +37,8 @@ function showSection(id) {
     if (active) active.classList.remove('hidden');
     const nav = document.getElementById('main-nav');
     if (nav) nav.classList.toggle('hidden', id.startsWith('dashboard'));
+    const cta = document.getElementById('sticky-cta');
+    if (cta && id !== 'landing') cta.classList.add('hidden');
     closeMobileMenu();
     window.scrollTo(0, 0);
 }
@@ -62,6 +64,31 @@ function submitLead(event) {
     showToast('¡Solicitud enviada! Nos contactaremos por WhatsApp.', 'success');
     event.target.reset();
 }
+
+/* ── Autoevaluación (dolores → precarga el formulario) ─── */
+function selectTriage(card) {
+    document.querySelectorAll('#self-triage-grid .triage-card').forEach(c => c.classList.remove('triage-selected'));
+    card.classList.add('triage-selected');
+    const motivo = card.dataset.motivo;
+    const select = document.getElementById('lead-motivo');
+    if (select) {
+        [...select.options].forEach(o => { o.selected = o.value === motivo || o.text === motivo; });
+    }
+    const result = document.getElementById('triage-result');
+    if (result) result.classList.remove('hidden');
+}
+
+/* ── CTA móvil persistente ─────────────────────────────── */
+function initStickyCta() {
+    const cta = document.getElementById('sticky-cta');
+    const hero = document.querySelector('header');
+    if (!cta || !hero || !('IntersectionObserver' in window)) return;
+    const io = new IntersectionObserver(([entry]) => {
+        cta.classList.toggle('hidden', entry.isIntersecting);
+    }, { threshold: 0 });
+    io.observe(hero);
+}
+document.addEventListener('DOMContentLoaded', initStickyCta);
 
 function loginPatient() {
     showToast('Bienvenida');

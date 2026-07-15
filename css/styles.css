@@ -71,6 +71,28 @@ button:active { transform: scale(.97); }
 /* Stagger del calendario (solo primera entrada al dashboard) */
 .cal-enter { animation: rise-in .4s var(--ease-out-strong) both; }
 
+/* ── FAQ (details/summary nativos) ─────────────────────── */
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-chevron { transition: transform 200ms var(--ease-out-strong); }
+.faq-item[open] .faq-chevron { transform: rotate(180deg); }
+.faq-item[open] summary { padding-bottom: .5rem; }
+
+/* ── Autoevaluación (tarjetas de dolores) ──────────────── */
+.triage-card { transition: border-color 160ms ease, background 160ms ease, transform 160ms var(--ease-out-strong); cursor: pointer; }
+.triage-card:hover { border-color: rgba(163,184,156,.6); }
+.triage-card.triage-selected {
+    background: #1a2a45;
+    border-color: #1a2a45;
+}
+.triage-card.triage-selected p { color: #f5f0e8; }
+.triage-card.triage-selected > div { background: rgba(255,255,255,.12); }
+
+/* ── CTA móvil persistente ─────────────────────────────── */
+/* Igual que #mobile-menu: toggling la clase .hidden de Tailwind
+   (display:none) no es transicionable, así que la entrada usa un
+   keyframe discreto en vez de una transition. */
+#sticky-cta:not(.hidden) { animation: rise-in .3s var(--ease-out-strong) both; }
+
 /* ── Toast ─────────────────────────────────────────────── */
 @keyframes toast-in {
     from { opacity: 0; transform: translateY(-8px); }
