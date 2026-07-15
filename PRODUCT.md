@@ -43,10 +43,13 @@ directamente desde cualquier equipo (file://) y en GitHub Pages.
 ## Happy path de demo (< 3 minutos)
 
 1. Abrir el sitio → hero con promesa médica y foto de la doctora.
-2. Scroll guiado: dolores del paciente → perfil (hito Long Hair FUE) →
-   arsenal clínico → alianza Lazartigue con recomendador interactivo →
-   sedes con agendamiento real → Capillum.
-3. Completar el formulario de captación → confirmación inmediata.
+2. Scroll guiado: franja de credenciales → autoevaluación "Diseñado para
+   ti si presentas…" (toca un caso, precarga el formulario) → perfil
+   (hito Long Hair FUE) → arsenal clínico → alianza Lazartigue con
+   recomendador interactivo → sedes con agendamiento real → Capillum →
+   FAQ.
+3. Completar el formulario de captación (motivo ya precargado) →
+   confirmación inmediata.
 4. "Portal Pacientes" → login demo → planificador postoperatorio: mover el
    slider de día, ver calendario de hitos, subir una foto de evolución.
 5. "Portal médico" → login demo → dashboard: crear un seguimiento con el

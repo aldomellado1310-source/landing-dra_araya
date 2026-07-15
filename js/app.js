@@ -17,7 +17,7 @@ const appState = {
 function showToast(message, type = 'success') {
     const container = document.getElementById('toast-container');
     const toast = document.createElement('div');
-    toast.className = `toast-enter pointer-events-auto p-4 rounded-xl shadow-lg border text-xs font-semibold bg-white ${type === 'success' ? 'border-sage text-navy' : 'border-red-300 text-red-800'}`;
+    toast.className = `toast-enter pointer-events-auto w-full sm:w-auto sm:max-w-sm p-4 rounded-xl shadow-lg border text-xs font-semibold bg-white ${type === 'success' ? 'border-sage text-navy' : 'border-red-300 text-red-800'}`;
     const label = document.createElement('span');
     label.textContent = message;
     toast.appendChild(label);
@@ -37,6 +37,8 @@ function showSection(id) {
     if (active) active.classList.remove('hidden');
     const nav = document.getElementById('main-nav');
     if (nav) nav.classList.toggle('hidden', id.startsWith('dashboard'));
+    const cta = document.getElementById('sticky-cta');
+    if (cta && id !== 'landing') cta.classList.add('hidden');
     closeMobileMenu();
     window.scrollTo(0, 0);
 }
@@ -62,6 +64,31 @@ function submitLead(event) {
     showToast('¡Solicitud enviada! Nos contactaremos por WhatsApp.', 'success');
     event.target.reset();
 }
+
+/* ── Autoevaluación (dolores → precarga el formulario) ─── */
+function selectTriage(card) {
+    document.querySelectorAll('#self-triage-grid .triage-card').forEach(c => c.classList.remove('triage-selected'));
+    card.classList.add('triage-selected');
+    const motivo = card.dataset.motivo;
+    const select = document.getElementById('lead-motivo');
+    if (select) {
+        [...select.options].forEach(o => { o.selected = o.value === motivo || o.text === motivo; });
+    }
+    const result = document.getElementById('triage-result');
+    if (result) result.classList.remove('hidden');
+}
+
+/* ── CTA móvil persistente ─────────────────────────────── */
+function initStickyCta() {
+    const cta = document.getElementById('sticky-cta');
+    const hero = document.querySelector('header');
+    if (!cta || !hero || !('IntersectionObserver' in window)) return;
+    const io = new IntersectionObserver(([entry]) => {
+        cta.classList.toggle('hidden', entry.isIntersecting);
+    }, { threshold: 0 });
+    io.observe(hero);
+}
+document.addEventListener('DOMContentLoaded', initStickyCta);
 
 function loginPatient() {
     showToast('Bienvenida');
@@ -275,7 +302,20 @@ function setPatientTab(id) {
         const btn = document.getElementById(`btn-tab-${t}`);
         if (el)  el.style.display = t === id ? 'block' : 'none';
         if (btn) btn.className = t === id
-            ? 'w-full text-left px-3 py-2.5 rounded-lg font-medium bg-white/10 text-white'
-            : 'w-full text-left px-3 py-2.5 rounded-lg font-medium text-creme/75 hover:bg-white/5';
+            ? 'shrink-0 whitespace-nowrap lg:w-full text-left px-4 py-2 lg:px-3 lg:py-2.5 rounded-lg font-medium bg-white/10 text-white'
+            : 'shrink-0 whitespace-nowrap lg:w-full text-left px-4 py-2 lg:px-3 lg:py-2.5 rounded-lg font-medium text-creme/75 hover:bg-white/5';
     });
+    scrollTabContentIntoView(`p-tab-${id}`);
+}
+
+/* Solo baja el scroll si el contenido de la pestaña no está ya a la
+   vista: en desktop (sidebar fijo al lado) casi nunca hace falta; en
+   móvil (sidebar apilado arriba) es lo que evita que el cambio de
+   pestaña parezca no haber hecho nada. */
+function scrollTabContentIntoView(id) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const alreadyVisible = rect.top >= 0 && rect.top < window.innerHeight * 0.5;
+    if (!alreadyVisible) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }

@@ -17,6 +17,23 @@ p { text-wrap: pretty; }
     outline-offset: 2px;
 }
 
+/* ── Sombras suaves en capas ───────────────────────────────
+   Sustituyen las sombras duras por defecto de Tailwind con
+   capas difusas teñidas del navy de marca. Esta hoja carga
+   después de tailwind.css, así que gana el empate. */
+.shadow-lg {
+    box-shadow: 0 2px 4px rgba(26, 42, 69, .04),
+                0 10px 24px -6px rgba(26, 42, 69, .10);
+}
+.shadow-xl {
+    box-shadow: 0 2px 6px rgba(26, 42, 69, .05),
+                0 18px 40px -12px rgba(26, 42, 69, .14);
+}
+.shadow-2xl {
+    box-shadow: 0 4px 10px rgba(26, 42, 69, .05),
+                0 28px 60px -16px rgba(26, 42, 69, .18);
+}
+
 /* ── Feedback de presión ───────────────────────────────── */
 button { transition: transform 160ms var(--ease-out-strong); }
 button:active { transform: scale(.97); }
@@ -53,6 +70,28 @@ button:active { transform: scale(.97); }
 
 /* Stagger del calendario (solo primera entrada al dashboard) */
 .cal-enter { animation: rise-in .4s var(--ease-out-strong) both; }
+
+/* ── FAQ (details/summary nativos) ─────────────────────── */
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-chevron { transition: transform 200ms var(--ease-out-strong); }
+.faq-item[open] .faq-chevron { transform: rotate(180deg); }
+.faq-item[open] summary { padding-bottom: .5rem; }
+
+/* ── Autoevaluación (tarjetas de dolores) ──────────────── */
+.triage-card { transition: border-color 160ms ease, background 160ms ease, transform 160ms var(--ease-out-strong); cursor: pointer; }
+.triage-card:hover { border-color: rgba(163,184,156,.6); }
+.triage-card.triage-selected {
+    background: #1a2a45;
+    border-color: #1a2a45;
+}
+.triage-card.triage-selected p { color: #f5f0e8; }
+.triage-card.triage-selected > div { background: rgba(255,255,255,.12); }
+
+/* ── CTA móvil persistente ─────────────────────────────── */
+/* Igual que #mobile-menu: toggling la clase .hidden de Tailwind
+   (display:none) no es transicionable, así que la entrada usa un
+   keyframe discreto en vez de una transition. */
+#sticky-cta:not(.hidden) { animation: rise-in .3s var(--ease-out-strong) both; }
 
 /* ── Toast ─────────────────────────────────────────────── */
 @keyframes toast-in {
