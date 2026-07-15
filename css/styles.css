@@ -17,6 +17,23 @@ p { text-wrap: pretty; }
     outline-offset: 2px;
 }
 
+/* ── Sombras suaves en capas ───────────────────────────────
+   Sustituyen las sombras duras por defecto de Tailwind con
+   capas difusas teñidas del navy de marca. Esta hoja carga
+   después de tailwind.css, así que gana el empate. */
+.shadow-lg {
+    box-shadow: 0 2px 4px rgba(26, 42, 69, .04),
+                0 10px 24px -6px rgba(26, 42, 69, .10);
+}
+.shadow-xl {
+    box-shadow: 0 2px 6px rgba(26, 42, 69, .05),
+                0 18px 40px -12px rgba(26, 42, 69, .14);
+}
+.shadow-2xl {
+    box-shadow: 0 4px 10px rgba(26, 42, 69, .05),
+                0 28px 60px -16px rgba(26, 42, 69, .18);
+}
+
 /* ── Feedback de presión ───────────────────────────────── */
 button { transition: transform 160ms var(--ease-out-strong); }
 button:active { transform: scale(.97); }
